@@ -1,64 +1,62 @@
 <template>
   <v-app>
-    <v-toolbar app class="white--text" :class="isAtTop ? 'transparent' : 'deepblue'" dense>
-      <v-toolbar-title class="headline text-uppercase">
+    <v-toolbar app class="white--text" :class="isAtTop && isHome() ? 'transparent' : 'deepblue'" dense>
+      <v-toolbar-title class="headline text-uppercase logo-name" @click="onHomeClick()">
         <v-icon color="red" style="background-color: pink">favorite</v-icon>
         <span class="font-weight-light" style="margin-left: 20px">AFROPICS</span>
       </v-toolbar-title>
       <span style="width: 30px"></span>
-      <v-text-field
-              v-if="!isAtTop"
-              class="compact"
-              background-color="white"
-              v-model="search"
-              placeholder="Chercher des photos"
-              append-icon="search"
-              @click:append="onSearchClick()"
-              solo
-              required
-      ></v-text-field>
+      <v-form @submit.native="onSearchClick()">
+        <v-text-field
+                v-if="!(isAtTop && isHome())"
+                class="compact"
+                background-color="white"
+                v-model="search"
+                placeholder="Chercher des photos"
+                append-icon="search"
+                @click:append="onSearchClick()"
+                solo
+                required
+        ></v-text-field>
+      </v-form>
       <v-spacer></v-spacer>
       <v-btn
               flat
               color="white"
-              href="https://github.com/vuetifyjs/vuetify/releases/latest"
-              target="_blank"
+              @click="onAboutClick()"
       >
         <span class="mr-2">Explorer</span>
       </v-btn>
       <v-btn
               flat
               color="white"
-              href="https://github.com/vuetifyjs/vuetify/releases/latest"
-              target="_blank"
+              @click="onAboutClick()"
       >
         <span class="mr-2">Licence</span>
       </v-btn>
       <v-btn
               flat
               color="white"
-              href="https://github.com/vuetifyjs/vuetify/releases/latest"
-              target="_blank"
+              @click="onAboutClick()"
       >
         <span class="mr-2"><v-icon>more_horiz</v-icon></span>
       </v-btn>
       <v-btn
               dark
               color="#05a081"
-              href="https://github.com/vuetifyjs/vuetify/releases/latest"
-              target="_blank"
+              @click="onAboutClick()"
       >
         <span class="mr-2">Inscription</span>
       </v-btn>
     </v-toolbar>
 
-    <div class="hero">
+    <div class="hero" v-if="isHome()">
       <div class="hero-image">
         <img src="https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=350.0&amp;w=1400" srcset="https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=250.0&amp;w=1000 1000w,https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=375.0&amp;w=1500 1500w,https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=500.0&amp;w=2000 2000w,https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=625.0&amp;w=2500 2500w,https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=750.0&amp;w=3000 3000w,https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=875.0&amp;w=3500 3500w,https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=1000.0&amp;w=4000 4000w,https://images.pexels.com/photos/1674817/pexels-photo-1674817.jpeg?auto=compress&amp;cs=tinysrgb&amp;fit=crop&amp;h=1250.0&amp;w=5000 5000w">
       </div>
       <div class="hero-content">
-        <div class="hero-title">The best free stock photos shared by talented photographers.</div>
-        <v-form>
+        <div class="hero-title">Les meilleurs free stock photos partagées par des photographes talentueux.</div>
+        <v-form @submit.native="onSearchClick()">
           <v-text-field
                   background-color="white"
                   v-model="search"
@@ -80,6 +78,9 @@
 </template>
 
 <style>
+  .logo-name {
+    cursor: pointer;
+  }
   .deepblue {
     background-color: #232a34 !important;
     border-color: #232a34 !important;
@@ -160,11 +161,21 @@
         computed: {
         },
         methods: {
-            handleScroll(event) {
+            isHome() {
+                return this.$router.currentRoute.name === 'home'
+            },
+            onHomeClick() {
+                this.$router.push({name: 'home'})
+            },
+            onAboutClick() {
+                this.$router.push({name: 'about'})
+            },
+            handleScroll() {
                 this.isAtTop = window.scrollY < 100
             },
             onSearchClick() {
-                console.log('search click')
+                this.$router.push({name: 'about'})
+                this.search = ''
             }
         }
     }
